@@ -11,20 +11,15 @@ export type Unit =
   | 'lb'
   | '';
 
-export type Ingredient = {
+export class Ingredient {
   name: string;
-  unit: Unit;
-  amount: string;
-};
+  amount: number;
+  unit: string;
+}
 
-export type NewRecipe = {
+export class CreateRecipeDto {
   title: string;
   description: string;
   ingredients: Ingredient[];
   category: string;
-};
-
-export type User = {
-  email: string;
-  password: string;
-};
+}

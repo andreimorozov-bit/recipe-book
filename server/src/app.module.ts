@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RecipesModule } from './recipes/recipes.module';
+import { AuthModule } from './auth/auth.module';
 import * as Joi from '@hapi/joi';
 
 @Module({
@@ -25,6 +26,7 @@ import * as Joi from '@hapi/joi';
       synchronize: true,
     }),
     RecipesModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

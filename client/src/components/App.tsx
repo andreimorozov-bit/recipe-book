@@ -7,6 +7,8 @@ import { Header } from './ui/Header';
 import { NewRecipePage } from '../pages/NewRecipe';
 import { RecipeDetailPage } from '../pages/RecipeDetail';
 import { RecipesListPage } from '../pages/RecipesList';
+import { SignUpPage } from '../pages/SignUp';
+import { SignInPage } from '../pages/SignIn';
 
 function App() {
   return (
@@ -30,12 +32,18 @@ function App() {
           </Route>
           <Route path='/signin/google' exact>
             <Button variant='contained' color='secondary'>
-              Sign In with google
+              Sign In with google Page
             </Button>
           </Route>
           <Route path='/signin/email' exact>
+            <SignInPage />
+          </Route>
+          <Route path='/signup/email' exact>
+            <SignUpPage />
+          </Route>
+          <Route path='/signout' exact>
             <Button variant='contained' color='secondary'>
-              Sign In with email
+              Sign Out Page
             </Button>
           </Route>
         </Switch>

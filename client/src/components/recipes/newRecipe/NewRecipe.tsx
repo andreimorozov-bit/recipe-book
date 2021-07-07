@@ -19,7 +19,7 @@ import {
   NewRecipe as NewRecipeType,
   Unit,
 } from '../../../common/types';
-import { createRecipe } from '../../../api/recipe';
+import { createRecipe } from '../../../api/recipes';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -90,7 +90,6 @@ export const NewRecipe: React.FC = () => {
   const [title, setTitle] = useState<string>('');
   const [ingredients, setIngredients] = useState<Ingredient[]>([
     { amount: '', unit: '', name: '' },
-    { amount: '', unit: '', name: '' },
   ]);
 
   const handleTitleChange = (event: React.ChangeEvent<{ value: any }>) => {
@@ -116,13 +115,14 @@ export const NewRecipe: React.FC = () => {
     event: React.ChangeEvent<{ value: any }>,
     index: number
   ) => {
-    const newAmount = parseInt(event.target.value);
+    const newAmount =
+      event.target.value.length > 0 ? parseInt(event.target.value) : '';
     console.log(typeof newAmount);
     console.log(newAmount);
     let newIngredients = [];
     if (
       (typeof newAmount === 'number' && newAmount >= 0 && newAmount !== NaN) ||
-      (event.target.value === '' && newAmount !== NaN)
+      event.target.value === ''
     ) {
       newIngredients = ingredients.map((item, ind) => {
         const newItem = { ...item, amount: newAmount.toString() };
@@ -216,9 +216,14 @@ export const NewRecipe: React.FC = () => {
           </FormControl>
         </div>
 
-        <Grid container>
+        <Grid
+          container
+          direction='row'
+          justify='center'
+          alignItems='flex-start'
+        >
           <Grid item xs={12} sm={12} md={6} className={classes.center}>
-            <Grid container>
+            <Grid container direction='row' alignItems='flex-start'>
               <Typography variant='h6' color='primary'>
                 Ingredients
               </Typography>

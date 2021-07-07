@@ -128,15 +128,23 @@ export const Header: React.FC = () => {
               to='/newrecipe'
             />
             <Tab
-              aria-owns={anchorEl ? 'simple-menu' : undefined}
-              aria-haspopup={anchorEl ? 'true' : undefined}
-              onMouseOver={(event: any) => handleMenuClick(event)}
               className={classes.tab}
               label='Sign Up'
               component={Link}
-              to='/signup'
+              to='/signup/email'
             />
-            <Tab className={classes.tab} label='Sign Out' />
+            <Tab
+              className={classes.tab}
+              label='Sign In'
+              component={Link}
+              to='/signin/email'
+            />
+            <Tab
+              className={classes.tab}
+              label='Sign Out'
+              component={Link}
+              to='/signout'
+            />
           </Tabs>
         </Toolbar>
       </AppBar>
