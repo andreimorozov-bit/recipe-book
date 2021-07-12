@@ -9,6 +9,7 @@ import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
+import { useCookies } from 'react-cookie';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -53,35 +54,19 @@ export const Header: React.FC = () => {
   const [value, setValue] = useState<number>(0);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [open, setOpen] = useState<boolean>(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [cookies, setCookies, removeCookies] = useCookies(['jwtToken']);
 
   useEffect(() => {
-    if (window.location.pathname === '/' && value !== 0) {
-      setValue(0);
+    if (cookies.jwtToken && cookies.jwtToken?.length > 0) {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
     }
-    if (window.location.pathname === '/newrecipe' && value !== 1) {
-      setValue(1);
-    }
-    if (
-      (window.location.pathname === '/signin/google' ||
-        window.location.pathname === '/signin/email') &&
-      value !== 2
-    ) {
-      setValue(2);
-    }
-  }, [value]);
+  }, [cookies]);
 
   const handleChange = (e: React.ChangeEvent<{}>, value: number) => {
     setValue(value);
-  };
-
-  const handleMenuClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
-    setAnchorEl(event.currentTarget);
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-    setOpen(false);
   };
 
   const handleLogoClick = () => {
@@ -89,9 +74,11 @@ export const Header: React.FC = () => {
     setValue(0);
   };
 
-  const handleMouseLeave = (event: any) => {
-    setAnchorEl(null);
-    setOpen(false);
+  const handleSignOut = () => {
+    removeCookies('jwtToken');
+    // setCookies('jwtToken', '', { path: '/' });
+    setIsLoggedIn(false);
+    history.push('/signin/email');
   };
 
   return (
@@ -108,43 +95,55 @@ export const Header: React.FC = () => {
             className={classes.tabContainer}
             indicatorColor='primary'
           >
-            <Tab className={classes.tab} label='Home' component={Link} to='/' />
-            <Tab
-              className={classes.tab}
-              label='My Recipies'
-              component={Link}
-              to='/recipies'
-            />
-            <Tab
-              className={classes.tab}
-              label='Recipe'
-              component={Link}
-              to='/recipies/2'
-            />
-            <Tab
-              className={classes.tab}
-              label='Create New'
-              component={Link}
-              to='/newrecipe'
-            />
-            <Tab
-              className={classes.tab}
-              label='Sign Up'
-              component={Link}
-              to='/signup/email'
-            />
-            <Tab
-              className={classes.tab}
-              label='Sign In'
-              component={Link}
-              to='/signin/email'
-            />
-            <Tab
-              className={classes.tab}
-              label='Sign Out'
-              component={Link}
-              to='/signout'
-            />
+            {isLoggedIn && (
+              <Fragment>
+                <Tab
+                  className={classes.tab}
+                  label='Home'
+                  component={Link}
+                  to='/'
+                />
+                <Tab
+                  className={classes.tab}
+                  label='My Recipes'
+                  component={Link}
+                  to='/recipes'
+                />
+                <Tab
+                  className={classes.tab}
+                  label='Recipe'
+                  component={Link}
+                  to='/recipes/2'
+                />
+                <Tab
+                  className={classes.tab}
+                  label='Create New'
+                  component={Link}
+                  to='/newrecipe'
+                />
+                <Tab
+                  className={classes.tab}
+                  label='Sign Out'
+                  onClick={handleSignOut}
+                />
+              </Fragment>
+            )}
+            {!isLoggedIn && (
+              <Fragment>
+                <Tab
+                  className={classes.tab}
+                  label='Sign Up'
+                  component={Link}
+                  to='/signup/email'
+                />
+                <Tab
+                  className={classes.tab}
+                  label='Sign In'
+                  component={Link}
+                  to='/signin/email'
+                />
+              </Fragment>
+            )}
           </Tabs>
         </Toolbar>
       </AppBar>

@@ -24,10 +24,10 @@ function App() {
               Home
             </Button>
           </Route>
-          <Route path='/recipies' exact>
+          <Route path='/recipes' exact>
             <RecipesListPage />
           </Route>
-          <Route path='/recipies/:id'>
+          <Route path='/recipes/:id'>
             <RecipeDetailPage />
           </Route>
           <Route path='/signin/google' exact>

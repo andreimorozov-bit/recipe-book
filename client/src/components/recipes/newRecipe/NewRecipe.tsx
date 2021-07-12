@@ -20,6 +20,7 @@ import {
   Unit,
 } from '../../../common/types';
 import { createRecipe } from '../../../api/recipes';
+import { useCookies } from 'react-cookie';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -91,6 +92,7 @@ export const NewRecipe: React.FC = () => {
   const [ingredients, setIngredients] = useState<Ingredient[]>([
     { amount: '', unit: '', name: '' },
   ]);
+  const [cookies, setCookies, deleteCookies] = useCookies(['jwtToken']);
 
   const handleTitleChange = (event: React.ChangeEvent<{ value: any }>) => {
     setTitle(event.target.value);
@@ -182,7 +184,8 @@ export const NewRecipe: React.FC = () => {
       category,
       description,
     };
-    const response = await createRecipe(newRecipe);
+    const response = await createRecipe(newRecipe, cookies.jwtToken);
+    console.log(response);
   };
 
   return (

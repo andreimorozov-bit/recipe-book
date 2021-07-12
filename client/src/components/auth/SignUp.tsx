@@ -6,6 +6,8 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { signUpUser } from '../../api/auth';
 import { truncate } from 'fs';
+import { useCookies } from 'react-cookie';
+import { AuthResponse } from '../../common/types';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -34,6 +36,7 @@ export const SignUp: React.FC = () => {
   const [password, setPassword] = useState<string>('');
   const [repeatPassword, setRepeatPassword] = useState<string>('');
   const [passwordsMatch, setPasswordsMatch] = useState<boolean>(true);
+  const [cookies, setCookies] = useCookies(['jwtToken']);
 
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
@@ -49,10 +52,11 @@ export const SignUp: React.FC = () => {
     setRepeatPassword(event.target.value);
   };
 
-  const handleSubmitClick = () => {
+  const handleSubmitClick = async () => {
     setPasswordsMatch(true);
     if (password === repeatPassword) {
-      signUpUser({ email, password });
+      const response: AuthResponse = await signUpUser({ email, password });
+      setCookies('jwtToken', response.accessToken, { path: '/' });
     } else {
       setPasswordsMatch(false);
     }

@@ -28,3 +28,14 @@ export type User = {
   email: string;
   password: string;
 };
+
+export type AuthResponse = {
+  accessToken: string;
+};
+
+export type Recipe = {
+  title: string;
+  description: string;
+  ingredients: Ingredient[];
+  category: string;
+};
