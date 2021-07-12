@@ -1,3 +1,28 @@
+import { useState } from 'react';
+import { useEffect } from 'react';
+import { useCookies } from 'react-cookie';
+import { getRecipes } from '../../api/recipes';
+import { Recipe } from '../../common/types';
+import { RecipesListItem } from './RecipesListItem';
+
 export const RecipesList: React.FC = () => {
-  return <div>List of recipies by filter may be with pictures</div>;
+  const [cookies, setCookies, deleteCookies] = useCookies(['jwtToken']);
+  const [recipes, setRecipes] = useState<Recipe[]>([]);
+
+  useEffect(() => {
+    const fetchRecipes = async () => {
+      const response = await getRecipes(cookies.jwtToken);
+      setRecipes(response);
+    };
+
+    fetchRecipes();
+  }, []);
+
+  return (
+    <div>
+      {recipes.map((recipe) => {
+        return <RecipesListItem recipe={recipe} />;
+      })}
+    </div>
+  );
 };

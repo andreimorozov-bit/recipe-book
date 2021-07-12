@@ -1,4 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Exclude } from 'class-transformer';
+import { User } from 'src/auth/user.entity';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Ingredient } from './models/ingredient';
 
 @Entity()
@@ -17,4 +19,8 @@ export class Recipe {
 
   @Column('jsonb', { nullable: true })
   ingredients?: Ingredient[];
+
+  @ManyToOne((type) => User, (user) => user.recipes, { eager: false })
+  @Exclude({ toPlainOnly: true })
+  user: User;
 }

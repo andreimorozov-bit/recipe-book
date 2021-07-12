@@ -5,6 +5,9 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { signInUser } from '../../api/auth';
+import { AuthResponse } from '../../common/types';
+import { useCookies } from 'react-cookie';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -30,6 +33,8 @@ export const SignIn: React.FC = () => {
   const classes = useStyles();
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [cookies, setCookies, deleteCookies] = useCookies(['jwtToken']);
+  const history = useHistory();
 
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
@@ -39,8 +44,11 @@ export const SignIn: React.FC = () => {
     setPassword(event.target.value);
   };
 
-  const handleSubmitClick = () => {
-    signInUser({ email, password });
+  const handleSubmitClick = async () => {
+    const response: AuthResponse = await signInUser({ email, password });
+    setCookies('jwtToken', response.accessToken, { path: '/' });
+    history.push('/recipes');
+    console.log(cookies.jwtToken);
   };
 
   return (
