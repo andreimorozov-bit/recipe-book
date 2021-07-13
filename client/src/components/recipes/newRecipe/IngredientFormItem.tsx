@@ -12,15 +12,18 @@ import React from 'react';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    root: {
+      display: 'flex',
+    },
     amount: {
       width: '5rem',
     },
     units: {
       margin: theme.spacing(1),
-      minWidth: 90,
+      minWidth: '80px',
     },
     name: {
-      width: '15rem',
+      flexGrow: 1,
     },
     select: {
       height: '40px',
@@ -51,7 +54,7 @@ export const IngredientFormItem: React.FC<IngredientFormItemProps> = ({
   const classes = useStyles();
 
   return (
-    <Grid item xs={12} sm={12} md={12} lg={12}>
+    <Grid item xs={12} sm={12} md={12} lg={12} className={classes.root}>
       <TextField
         margin='dense'
         className={classes.amount}

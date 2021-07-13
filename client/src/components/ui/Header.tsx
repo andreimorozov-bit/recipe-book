@@ -111,12 +111,6 @@ export const Header: React.FC = () => {
                 />
                 <Tab
                   className={classes.tab}
-                  label='Recipe'
-                  component={Link}
-                  to='/recipes/2'
-                />
-                <Tab
-                  className={classes.tab}
                   label='Create New'
                   component={Link}
                   to='/newrecipe'

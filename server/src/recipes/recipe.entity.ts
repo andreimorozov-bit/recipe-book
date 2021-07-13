@@ -17,6 +17,12 @@ export class Recipe {
   @Column()
   category: string;
 
+  @Column()
+  rating: number;
+
+  @Column()
+  servings: number;
+
   @Column('jsonb', { nullable: true })
   ingredients?: Ingredient[];
 

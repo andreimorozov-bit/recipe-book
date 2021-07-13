@@ -9,9 +9,13 @@ interface DescriptionFormProps {
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    root: {
+      display: 'flex',
+    },
     text: {
       width: '30rem',
       marginTop: '8px',
+      flexGrow: 1,
     },
   })
 );
@@ -23,7 +27,7 @@ export const DescriptionForm: React.FC<DescriptionFormProps> = ({
   const classes = useStyles();
 
   return (
-    <div>
+    <div className={classes.root}>
       <TextField
         className={classes.text}
         id='description'

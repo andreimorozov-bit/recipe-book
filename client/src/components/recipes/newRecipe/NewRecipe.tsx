@@ -2,12 +2,16 @@ import React, { useState } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
+import Rating from '@material-ui/lab/Rating';
+import StarBorderIcon from '@material-ui/icons/StarBorder';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
+import AddIcon from '@material-ui/icons/Add';
+import RemoveIcon from '@material-ui/icons/Remove';
 import ClearIcon from '@material-ui/icons/Clear';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import Typography from '@material-ui/core/Typography';
@@ -25,27 +29,10 @@ import { useCookies } from 'react-cookie';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      maxWidth: '1100px',
+      maxWidth: '1270px',
       margin: '0 auto',
     },
-    form: {
-      '& .MuiTextField-root': {
-        margin: theme.spacing(1),
-      },
-      '& input': {
-        height: '36px',
-        padding: '0px 12px',
-      },
-
-      '& label': {
-        height: '36px',
-        top: '-3px',
-        left: '-3px',
-      },
-      '& label[data-shrink=true]': {
-        top: 0,
-      },
-    },
+    form: {},
     addIngredientContainer: {
       display: 'flex',
       justifyContent: 'center',
@@ -57,11 +44,28 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     titleContainer: {
       display: 'flex',
-      justifyContent: 'center',
+      justifyContent: 'flex-start',
+      alignItems: 'center',
+      marginTop: '1rem',
+      '& > * > * > *': {
+        marginRight: '1rem',
+      },
     },
     title: {
-      margin: '1rem 1.5rem',
+      margin: '0 0 1rem 0',
       width: '25rem',
+    },
+    category: {
+      margin: '0 0 1rem 0',
+      width: '12rem',
+    },
+    rating: {
+      margin: '0.5rem 0 1rem 0',
+    },
+
+    center: {
+      display: 'flex',
+      justifyContent: 'center',
     },
     save: {
       display: 'flex',
@@ -69,14 +73,6 @@ const useStyles = makeStyles((theme: Theme) =>
       '& button': {
         margin: '1rem',
       },
-    },
-    center: {
-      display: 'flex',
-      justifyContent: 'center',
-    },
-    category: {
-      margin: '1rem',
-      width: '12rem',
     },
   })
 );
@@ -89,6 +85,8 @@ export const NewRecipe: React.FC = () => {
   const [category, setCategory] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [title, setTitle] = useState<string>('');
+  const [servings, setServings] = useState<number>(1);
+  const [rating, setRating] = useState<number | null>(0);
   const [ingredients, setIngredients] = useState<Ingredient[]>([
     { amount: '', unit: '', name: '' },
   ]);
@@ -163,6 +161,20 @@ export const NewRecipe: React.FC = () => {
     setCategory(event.target.value);
   };
 
+  const handleServingsDecrease = () => {
+    if (servings > 1) {
+      setServings(servings - 1);
+    }
+  };
+
+  const handleServingsIncrease = () => {
+    setServings(servings + 1);
+  };
+
+  const handleRatingChange = (newRating: number | null) => {
+    setRating(newRating);
+  };
+
   const handleAddIngredientClick = () => {
     const newIngredients = [
       ...ingredients,
@@ -183,40 +195,67 @@ export const NewRecipe: React.FC = () => {
       ingredients,
       category,
       description,
+      servings,
+      rating,
     };
     const response = await createRecipe(newRecipe, cookies.jwtToken);
-    console.log(response);
   };
 
   return (
     <div className={classes.root}>
       <form noValidate autoComplete='off'>
         <div className={classes.titleContainer}>
-          <TextField
-            className={classes.title}
-            margin='dense'
-            label='Title'
-            value={title}
-            onChange={handleTitleChange}
-            variant='outlined'
-          />
-          <FormControl variant='outlined' className={classes.category}>
-            <InputLabel margin='dense' id='category-label'>
-              Category
-            </InputLabel>
-            <Select
-              labelId='category-label'
-              id='category'
+          <Grid container>
+            <TextField
+              className={classes.title}
               margin='dense'
-              value={category}
-              onChange={handleCategoryChange}
-              label='Category'
-            >
-              <MenuItem value={'dessert'}>dessert</MenuItem>
-              <MenuItem value={'salad'}>salad</MenuItem>
-              <MenuItem value={'soup'}>soup</MenuItem>
-            </Select>
-          </FormControl>
+              label='Title'
+              value={title}
+              onChange={handleTitleChange}
+              variant='outlined'
+            />
+            <FormControl variant='outlined' className={classes.category}>
+              <InputLabel margin='dense' id='category-label'>
+                Category
+              </InputLabel>
+              <Select
+                labelId='category-label'
+                id='category'
+                margin='dense'
+                value={category}
+                onChange={handleCategoryChange}
+                label='Category'
+              >
+                <MenuItem value={'dessert'}>dessert</MenuItem>
+                <MenuItem value={'salad'}>salad</MenuItem>
+                <MenuItem value={'soup'}>soup</MenuItem>
+              </Select>
+            </FormControl>
+            <div>
+              <Typography component='span'>Servings:</Typography>
+              <IconButton
+                aria-label='decrease'
+                onClick={handleServingsDecrease}
+              >
+                <RemoveIcon />
+              </IconButton>
+              <Typography component='span'>{servings}</Typography>
+              <IconButton
+                aria-label='increase'
+                onClick={handleServingsIncrease}
+              >
+                <AddIcon />
+              </IconButton>
+            </div>
+            <div className={classes.rating}>
+              <Rating
+                name='simple-controlled'
+                value={rating}
+                onChange={(event, newRating) => handleRatingChange(newRating)}
+                emptyIcon={<StarBorderIcon fontSize='inherit' />}
+              />
+            </div>
+          </Grid>
         </div>
 
         <Grid

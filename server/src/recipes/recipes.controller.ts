@@ -28,6 +28,12 @@ export class RecipesController {
     return this.recipesService.createRecipe(createRecipeDto, user);
   }
 
+  @Get(':id')
+  getById(@Param('id') id: string, @GetUser() user: User): Promise<Recipe> {
+    console.log(id);
+    return this.recipesService.getById(id, user);
+  }
+
   @Get()
   getAll(@GetUser() user: User): Promise<Recipe[]> {
     return this.recipesService.getAll(user);
