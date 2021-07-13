@@ -22,6 +22,8 @@ export type NewRecipe = {
   description: string;
   ingredients: Ingredient[];
   category: string;
+  servings: number;
+  rating: number | null;
 };
 
 export type User = {
@@ -34,8 +36,11 @@ export type AuthResponse = {
 };
 
 export type Recipe = {
+  id: string;
   title: string;
   description: string;
   ingredients: Ingredient[];
   category: string;
+  servings: number;
+  rating: number | null;
 };

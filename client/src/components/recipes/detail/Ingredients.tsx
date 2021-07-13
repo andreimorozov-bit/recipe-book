@@ -2,6 +2,7 @@ import { Fragment } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
+import { Ingredient, Recipe } from '../../../common/types';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -9,11 +10,26 @@ const useStyles = makeStyles((theme: Theme) =>
       color: theme.palette.primary.main,
       margin: '0.5rem auto',
     },
+    amount: {
+      fontWeight: 500,
+    },
+    unit: {
+      fontWeight: 500,
+    },
   })
 );
 
-export const Ingredients: React.FC = () => {
+interface IngredientsProps {
+  recipe: Recipe;
+  newIngredients: Ingredient[];
+}
+
+export const Ingredients: React.FC<IngredientsProps> = ({
+  recipe,
+  newIngredients,
+}) => {
   const classes = useStyles();
+  const { ingredients } = recipe;
 
   return (
     <Fragment>
@@ -22,29 +38,17 @@ export const Ingredients: React.FC = () => {
           Ingredients
         </Typography>
         <Grid container direction='column'>
-          <Grid item>
-            <Typography variant='body1'>200g ingedient 1</Typography>
-          </Grid>
-          <Grid item>
-            {' '}
-            <Typography variant='body1'>120g ingedient 2</Typography>
-          </Grid>
-          <Grid item>
-            {' '}
-            <Typography variant='body1'>60g ingedient 3</Typography>
-          </Grid>
-          <Grid item>
-            {' '}
-            <Typography variant='body1'>40ml ingedient 4</Typography>
-          </Grid>
-          <Grid item>
-            {' '}
-            <Typography variant='body1'>2pc ingedient 5</Typography>
-          </Grid>
-          <Grid item>
-            {' '}
-            <Typography variant='body1'>1pc ingedient 6</Typography>
-          </Grid>
+          {newIngredients?.map((ingredient, index) => {
+            return (
+              <Grid item key={index}>
+                <Typography variant='body1'>
+                  <span className={classes.amount}>{ingredient.amount}</span>{' '}
+                  <span className={classes.unit}>{ingredient.unit}</span>{' '}
+                  {ingredient.name}
+                </Typography>
+              </Grid>
+            );
+          })}
         </Grid>
       </Grid>
     </Fragment>

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/auth/user.entity';
 import { CreateRecipeDto } from './dto/create-recipe.dto';
@@ -19,7 +19,6 @@ export class RecipesService {
     const recipe = this.recipesRepository.create({ ...createRecipeDto, user });
     const savedRecipe = await this.recipesRepository.save(recipe);
 
-    console.log(savedRecipe);
     return savedRecipe;
   }
 
@@ -31,5 +30,19 @@ export class RecipesService {
     const recipes = await query.getMany();
 
     return recipes;
+  }
+
+  async getById(id: string, user: User): Promise<Recipe> {
+    const query = this.recipesRepository.createQueryBuilder('recipe');
+
+    query.where({ user });
+
+    query.andWhere('(recipe.id = :id)', { id: id });
+    const recipe = await query.getOne();
+    if (!recipe) {
+      throw new NotFoundException('Recipe not found');
+    }
+
+    return recipe;
   }
 }

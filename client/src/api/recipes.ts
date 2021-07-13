@@ -29,3 +29,21 @@ export const getRecipes = async (token: string): Promise<Recipe[]> => {
 
   return response.data;
 };
+
+export const getRecipeById = async (
+  id: string,
+  token: string
+): Promise<Recipe> => {
+  const config = {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    },
+  };
+
+  const recipe: AxiosResponse<Recipe> = await axios.get(
+    `http://localhost:5000/recipes/${id}`,
+    config
+  );
+
+  return recipe.data;
+};
